@@ -9,6 +9,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/Books-Review')
     console.log('connected to the mongodb database server')
 })
 .catch((err) => console.log(err))
+
 const app = express() //initiate  express by giving name app
 app.use(express.json()) //request pass through this
 app.get('/', (req,res) =>{
@@ -18,7 +19,22 @@ app.get('/', (req,res) =>{
 res.send("Hello World")
 })
 
-app.use('/api/books', books_routes )
+app.use('/books', books_routes )
+
+//Error handling middleware
+app.use((err, req, res, nesxt)=>{
+    console.error(err)
+    if(err.name === "validationError") res.status (400)
+    else if(err.name ==="CastError") res.status(400)
+    console.log(err.message)
+    res.json({error: err.message})
+})
+
+//unknown path 
+app.use((req,res)=> {
+    res.status(404).json({error: "Path not Found"})
+})
+
 app.listen(port,()=>{
     console.log(`server is running at port ${port}`)
 })
