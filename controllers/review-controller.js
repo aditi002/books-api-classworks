@@ -18,7 +18,8 @@ const createAllReview = ((req, res,next) =>{
             res.status(404).json({error: 'book not found'})    
         }
         const review ={
-            text: req.body.text
+            text: req.body.text,
+            user: req.user.id
         }
         book.reviews.push(review)
         book.save()
@@ -63,7 +64,10 @@ const updateReviewByID =((req,res,next)=>{
         }
         book.reviews =  book.reviews.map((r)=>{
             if(r.id === req.params.reviews_id){
-                r.text = req.body.text
+                if(r.user ===req.user.id){
+                    r.text = req.body.text
+                }
+               
             }
             return r
         })
@@ -79,7 +83,7 @@ const deleteReviewByID =((req,res,next) => {
             if(!book) { res.status(404).json({error: 'book not found'})
     }
             book.reviews=book.reviews.filter((r) => {
-                return r.id !== req.params.reviews_id
+                return (r.id !== req.params.reviews_id && r.user === req.user.id)
             })
             book.save()
                 .then((book)=> res.status(204).end())
