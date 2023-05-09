@@ -4,6 +4,11 @@ const reviewSchema = new mongoose.Schema({
         type: String,
         required: true,
         minLength: 10
+    },
+    user : {
+        type : mongoose.Schema.Types.ObjectID,
+        ref : 'User'
+
     }
 })
 reviewSchema.set('toJSON',{

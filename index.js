@@ -2,6 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const books_routes = require('./routes/books-routes')
+const user_routes = require('./routes/user-routes')
+const {verifyUser} = require('./middlewares/auth')
 
 const port = process.env.PORT
 mongoose.connect('mongodb://127.0.0.1:27017/Books-Review')
@@ -19,6 +21,9 @@ app.get('/', (req,res) =>{
 res.send("Hello World")
 })
 
+
+app.use('/users', user_routes)
+app.use(verifyUser)            //call middleware
 app.use('/books', books_routes )
 
 //Error handling middleware
@@ -29,6 +34,7 @@ app.use((err, req, res, nesxt)=>{
     console.log(err.message)
     res.json({error: err.message})
 })
+
 
 //unknown path 
 app.use((req,res)=> {
