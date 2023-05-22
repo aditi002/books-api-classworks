@@ -27,7 +27,10 @@ const bookSchema = new mongoose.Schema({
         type:String,
         default:"Annonymous"  
     },
-    reviews:['reviewSchema0'] //embedded reviews in book.
+    reviews:['reviewSchema0'],
+    photo:{
+        type:String
+    } //embedded reviews in book.
 },{timestamps: true})
 
 bookSchema.set('toJSON',{
